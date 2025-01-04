@@ -27,7 +27,6 @@ class CategoryController extends Controller
     {
         $offset = $request->input('offset', 0);
         $limit = $request->input('limit', 10);
-
         $category = Category::find($id);
 
         if (! $category) {
@@ -36,14 +35,14 @@ class CategoryController extends Controller
             ]);
         }
 
+        $breadcrumbs = $this->getBreadcrumbs($category);
         $categories = Category::select('id', 'name')->where('parent_id', $id)->get();
-        $totalProducts = Product::where('category_id', $id)->count();
         $products = Product::where('category_id', $id)
             ->select('id', 'name', 'price')
             ->skip($offset)
             ->take($limit)
             ->get();
-        $breadcrumbs = $this->getBreadcrumbs($category);
+        $totalProducts = Product::where('category_id', $id)->count();
 
         return response()->json([
             'breadcrumbs' => $breadcrumbs,
@@ -56,7 +55,6 @@ class CategoryController extends Controller
     protected function getBreadcrumbs($category)
     {
         $breadcrumbs = [];
-
         $breadcrumbs[] = [
             'name' => $category->name,
             'id' => $category->id,
