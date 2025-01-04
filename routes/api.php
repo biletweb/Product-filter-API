@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\FilterController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\FilterController;
+use Illuminate\Support\Facades\Route;
 
 Route::post('/products/filter', [FilterController::class, 'filter']);
 Route::post('/category/products', [FilterController::class, 'category']);

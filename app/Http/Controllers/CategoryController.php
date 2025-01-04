@@ -3,16 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
-use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
     public function index()
     {
-        $categories = Category::select('id', 'name')->where('parent_id', null)->get();
+        $categories = Category::where('parent_id', null)->select('id', 'name')->get();
+
+        if ($categories->isEmpty()) {
+            return response()->json([
+                'error' => 'Categories not found.',
+            ]);
+        }
 
         return response()->json([
-            'categories' => $categories
+            'categories' => $categories,
         ]);
     }
 
@@ -22,12 +27,12 @@ class CategoryController extends Controller
 
         if ($categories->isEmpty()) {
             return response()->json([
-                'error' => 'Categories not found.'
+                'error' => 'Categories not found.',
             ]);
         }
 
         return response()->json([
-            'categories' => $categories
+            'categories' => $categories,
         ]);
     }
 }
