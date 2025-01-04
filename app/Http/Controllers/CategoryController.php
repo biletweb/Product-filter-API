@@ -34,11 +34,13 @@ class CategoryController extends Controller
 
         $categories = Category::select('id', 'name')->where('parent_id', $id)->get();
         $totalProducts = Product::where('category_id', $id)->count();
+        $products = Product::where('category_id', $id)->select('id', 'name', 'price')->get();
         $breadcrumbs = $this->getBreadcrumbs($category);
 
         return response()->json([
-            'categories' => $categories,
             'breadcrumbs' => $breadcrumbs,
+            'categories' => $categories,
+            'products' => $products,
             'totalProducts' => $totalProducts,
         ]);
     }
