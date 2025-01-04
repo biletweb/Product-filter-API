@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Product;
+use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
@@ -22,8 +23,11 @@ class CategoryController extends Controller
         ]);
     }
 
-    public function subcategories($id)
+    public function subcategories(Request $request, int $id)
     {
+        $offset = $request->input('offset', 0);
+        $limit = $request->input('limit', 10);
+
         $category = Category::find($id);
 
         if (! $category) {
@@ -34,7 +38,11 @@ class CategoryController extends Controller
 
         $categories = Category::select('id', 'name')->where('parent_id', $id)->get();
         $totalProducts = Product::where('category_id', $id)->count();
-        $products = Product::where('category_id', $id)->select('id', 'name', 'price')->get();
+        $products = Product::where('category_id', $id)
+            ->select('id', 'name', 'price')
+            ->skip($offset)
+            ->take($limit)
+            ->get();
         $breadcrumbs = $this->getBreadcrumbs($category);
 
         return response()->json([
