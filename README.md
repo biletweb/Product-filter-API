@@ -43,22 +43,25 @@ php artisan serve
 
 ### Testing in Postman
 
-Sorting products based on filters
+Get parent categories
 ```sh
-POST http://127.0.0.1:8000/api/products/filter?category-id=1&filters[1][]=1&filters[1][]=2&offset=0&limit=10
+GET http://127.0.0.1:8000/api/categories
+```
 
-Key: category-id, Value:1
-Key: filters[1][], Value:1
-Key: filters[1][], Value:2
+Navigation by category
+```sh
+GET http://127.0.0.1:8000/api/categories/1/subcategories?offset=0&limit=10
+
 Key: offset, Value:0
 Key: limit, Value:10
 ```
 
-Sorting products by category and loading corresponding filters
+Sorting products based on filters
 ```sh
-POST http://127.0.0.1:8000/api/category/products/?category-id=1&offset=0&limit=10
+GET http://127.0.0.1:8000/api/products/2/subcategories/filter?filters[1][]=1&offset=0&limit=10
 
-Key: category-id, Value:1
+Key: filters[1][], Value:1
+Key: filters[1][], Value:2
 Key: offset, Value:0
 Key: limit, Value:10
 ```
