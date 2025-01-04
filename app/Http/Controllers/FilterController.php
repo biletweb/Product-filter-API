@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class FilterController extends Controller
 {
-    public function filter(Request $request, int $id)
+    public function filter(Request $request, $id)
     {
         $filters = $request->input('filters', []);
         $offset = $request->input('offset', 0);
