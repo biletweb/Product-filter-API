@@ -23,16 +23,40 @@ class CategoryController extends Controller
 
     public function subcategories($id)
     {
-        $categories = Category::select('id', 'name')->where('parent_id', $id)->get();
+        $category = Category::find($id);
 
-        if ($categories->isEmpty()) {
+        if (!$category) {
             return response()->json([
-                'error' => 'Categories not found.',
+                'error' => 'Category not found.',
             ]);
         }
 
+        $categories = Category::select('id', 'name')->where('parent_id', $id)->get();
+        $breadcrumbs = $this->getBreadcrumbs($category);
+
         return response()->json([
             'categories' => $categories,
+            'breadcrumbs' => $breadcrumbs,
         ]);
+    }
+
+    protected function getBreadcrumbs($category)
+    {
+        $breadcrumbs = [];
+
+        $breadcrumbs[] = [
+            'name' => $category->name,
+            'id' => $category->id,
+        ];
+
+        while ($category->parent) {
+            $category = $category->parent;
+            $breadcrumbs[] = [
+                'name' => $category->name,
+                'id' => $category->id,
+            ];
+        }
+
+        return array_reverse($breadcrumbs);
     }
 }
