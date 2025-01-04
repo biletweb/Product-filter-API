@@ -62,8 +62,16 @@ class FilterController extends Controller
         // Получаем идентификатор категории из запроса
         $categoryId = $request->input('category-id');
 
+        // Получаем категорию по идентификатору
+        $category = Category::find($categoryId);
+
+        // Если категория не найдена, возвращаем ошибку
+        if (! $category) {
+            return response()->json(['error' => 'Category not found.'], 404);
+        }
+
         // Получаем продукты, принадлежащие указанной категории
-        $filteredProducts = Product::where('category_id', $categoryId) // Фильтруем продукты по идентификатору категории
+        $filteredProducts = Product::where('category_id', $category->id) // Фильтруем продукты по идентификатору категории
             ->select('id', 'name', 'price', 'category_id') // Выбираем только необходимые поля
             ->skip($request->input('offset', 0)) // Пропускаем записи для пагинации (offset, по умолчанию 0)
             ->take($request->input('limit', 10)) // Ограничиваем количество записей (limit, по умолчанию 10)

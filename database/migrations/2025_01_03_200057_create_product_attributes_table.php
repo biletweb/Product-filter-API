@@ -16,6 +16,8 @@ return new class extends Migration
             $table->foreignId('attribute_id')->constrained('attributes')->onDelete('cascade');
             $table->foreignId('value_id')->constrained('attribute_values')->onDelete('cascade');
             $table->primary(['product_id', 'attribute_id']);
+            // Добавляем комбинированный индекс на поля product_id и attribute_id
+            $table->index(['product_id', 'attribute_id']);
         });
     }
 
