@@ -23,7 +23,7 @@ class CategoryController extends Controller
         ]);
     }
 
-    public function subcategories(Request $request, int $id)
+    public function subcategories(Request $request, $id)
     {
         $offset = $request->input('offset', 0);
         $limit = $request->input('limit', 10);
@@ -73,7 +73,7 @@ class CategoryController extends Controller
         return array_reverse($breadcrumbs);
     }
 
-    private function getCategoryFilters(Category $category)
+    private function getCategoryFilters($category)
     {
         $filters = $category->products
             ->flatMap(fn ($product) => $product->attributes)

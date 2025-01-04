@@ -12,7 +12,9 @@ class FilterController extends Controller
         $filters = $request->input('filters', []);
         $offset = $request->input('offset', 0);
         $limit = $request->input('limit', 10);
-        $query = Product::query()->select('id', 'name', 'price', 'category_id')->where('category_id', $id);
+        $query = Product::query()
+            ->select('id', 'name', 'price', 'category_id')
+            ->where('category_id', $id);
 
         foreach ($filters as $attribute => $valueIds) {
             if (empty($valueIds)) {
