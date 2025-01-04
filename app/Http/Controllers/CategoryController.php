@@ -37,6 +37,7 @@ class CategoryController extends Controller
 
         $breadcrumbs = $this->getBreadcrumbs($category);
         $categories = Category::select('id', 'name')->where('parent_id', $id)->get();
+        $categoryFilters = $this->getCategoryFilters($category);
         $products = Product::where('category_id', $id)
             ->select('id', 'name', 'price')
             ->skip($offset)
@@ -47,6 +48,7 @@ class CategoryController extends Controller
         return response()->json([
             'breadcrumbs' => $breadcrumbs,
             'categories' => $categories,
+            'categoryFilters' => $categoryFilters,
             'products' => $products,
             'totalProducts' => $totalProducts,
         ]);
@@ -69,5 +71,30 @@ class CategoryController extends Controller
         }
 
         return array_reverse($breadcrumbs);
+    }
+
+    private function getCategoryFilters(Category $category)
+    {
+        $filters = $category->products
+            ->flatMap(fn ($product) => $product->attributes)
+            ->groupBy('id')
+            ->map(fn ($attributes) => [
+                'id' => $attributes->first()->id,
+                'name' => $attributes->first()->name,
+                'values' => $attributes
+                    ->flatMap(fn ($attribute) => $attribute->values->filter(
+                        fn ($value) => $value->products->where('id', $attribute->pivot->product_id)->isNotEmpty()
+                    ))
+                    ->unique('id')
+                    ->map(fn ($value) => [
+                        'id' => $value->id,
+                        'value' => $value->value,
+                    ])
+                    ->values(),
+            ])
+            ->filter(fn ($filter) => $filter['values']->isNotEmpty())
+            ->values();
+
+        return $filters;
     }
 }
