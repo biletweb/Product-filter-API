@@ -25,7 +25,7 @@ class CategoryController extends Controller
     {
         $category = Category::find($id);
 
-        if (!$category) {
+        if (! $category) {
             return response()->json([
                 'error' => 'Category not found.',
             ]);
