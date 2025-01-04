@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Product;
 
 class CategoryController extends Controller
 {
@@ -32,11 +33,13 @@ class CategoryController extends Controller
         }
 
         $categories = Category::select('id', 'name')->where('parent_id', $id)->get();
+        $totalProducts = Product::where('category_id', $id)->count();
         $breadcrumbs = $this->getBreadcrumbs($category);
 
         return response()->json([
             'categories' => $categories,
             'breadcrumbs' => $breadcrumbs,
+            'totalProducts' => $totalProducts,
         ]);
     }
 
