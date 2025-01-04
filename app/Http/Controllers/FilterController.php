@@ -12,7 +12,7 @@ class FilterController extends Controller
     {
         // Получаем идентификатор категории из запроса
         $categoryId = $request->input('category-id');
-        if (!$categoryId) {
+        if (! $categoryId) {
             return response()->json(['error' => 'Category ID is required.'], 422);
         }
         // Получаем фильтры, если они есть в запросе, иначе используем пустой массив
