@@ -28,6 +28,7 @@ class CategoryController extends Controller
         $offset = $request->input('offset', 0);
         $limit = $request->input('limit', 10);
         $category = Category::find($id);
+        $categoryName = $category->name;
 
         if (! $category) {
             return response()->json([
@@ -48,6 +49,7 @@ class CategoryController extends Controller
         return response()->json([
             'breadcrumbs' => $breadcrumbs,
             'categories' => $categories,
+            'categoryName' => $categoryName,
             'categoryFilters' => $categoryFilters,
             'products' => $products,
             'totalProducts' => $totalProducts,
