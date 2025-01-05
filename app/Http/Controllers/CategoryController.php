@@ -103,13 +103,11 @@ class CategoryController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'slug' => ['nullable', 'string', 'max:255', 'unique:categories,slug'],
             'parent_id' => ['nullable', 'integer', 'exists:categories,id'],
         ]);
 
         $category = new Category;
         $category->name = $request->input('name');
-        $category->slug = $request->has('slug') ? $request->input('slug') : Str::slug($request->name);
         if ($request->has('parent_id')) {
             $category->parent_id = $request->input('parent_id');
         }
