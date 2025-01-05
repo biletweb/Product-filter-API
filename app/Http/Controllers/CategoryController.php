@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class CategoryController extends Controller
 {
@@ -96,5 +97,27 @@ class CategoryController extends Controller
             ->values();
 
         return $filters;
+    }
+
+    public function createCategory(Request $request)
+    {
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'slug' => ['nullable', 'string', 'max:255', 'unique:categories,slug'],
+            'parent_id' => ['nullable', 'integer', 'exists:categories,id'],
+        ]);
+
+        $category = new Category;
+        $category->name = $request->input('name');
+        $category->slug = $request->has('slug') ? $request->input('slug') : Str::slug($request->name);
+        if ($request->has('parent_id')) {
+            $category->parent_id = $request->input('parent_id');
+        }
+        $category->save();
+
+        return response()->json([
+            'message' => 'Category created successfully.',
+            'category' => $category, // Можно вернуть и сам объект категории
+        ]);
     }
 }
