@@ -40,6 +40,7 @@ class CategoryController extends Controller
         $categories = Category::select('id', 'name')->where('parent_id', $id)->get();
         $categoryFilters = $this->getCategoryFilters($category);
         $products = Product::where('category_id', $id)
+            ->with('attributes.values')
             ->select('id', 'name', 'price')
             ->skip($offset)
             ->take($limit)

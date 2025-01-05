@@ -13,6 +13,7 @@ class FilterController extends Controller
         $offset = $request->input('offset', 0);
         $limit = $request->input('limit', 10);
         $query = Product::query()
+            ->with('attributes.values')
             ->select('id', 'name', 'price', 'category_id')
             ->where('category_id', $id);
 
