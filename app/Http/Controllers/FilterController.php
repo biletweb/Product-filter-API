@@ -31,11 +31,9 @@ class FilterController extends Controller
         }
 
         $filteredProducts = $query->skip($offset)->take($limit)->get();
-        $totalProducts = $query->count();
 
         return response()->json([
             'products' => $filteredProducts,
-            'totalProducts' => $totalProducts,
         ]);
     }
 }

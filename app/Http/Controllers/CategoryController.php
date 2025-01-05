@@ -44,7 +44,6 @@ class CategoryController extends Controller
             ->skip($offset)
             ->take($limit)
             ->get();
-        $totalProducts = Product::where('category_id', $id)->count();
 
         return response()->json([
             'breadcrumbs' => $breadcrumbs,
@@ -52,7 +51,6 @@ class CategoryController extends Controller
             'categoryName' => $categoryName,
             'categoryFilters' => $categoryFilters,
             'products' => $products,
-            'totalProducts' => $totalProducts,
         ]);
     }
 
